@@ -1,1 +1,3 @@
 credentials.gandi
+get-logs.sftp
+uwsgi.log
