@@ -16,6 +16,13 @@ console)
     ssh $LOGIN@console.$DC.gpaas.net
     ;;
 deploy)
+    if git status --porcelain | grep -q ^. ; then
+	echo "You have uncommitted changes. If you really want to push, use 'forcedeploy'."
+	exit 1
+    fi
+    "$0" forcedeploy
+    ;;
+forcedeploy)
     git remote | grep -q ^gandi$ || git remote add gandi ssh+git://$LOGIN@git.$DC.gpaas.net/default.git
     git push -f gandi master
     ssh $LOGIN@git.$DC.gpaas.net "deploy default"
@@ -28,7 +35,7 @@ logs)
     rm get-logs.sftp
     ;;
 *)
-    echo "Specify one command: console, deploy, logs."
+    echo "Specify one command: console, deploy, forcedeploy, logs."
     ;;
 esac
 
